@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de mascotas</title>
+</head>
+<body>
+    <h1>Mascotas registradas</h1>
+
+    {% for mascota in mascotas %}
+        <p>
+            <a href="/mascotas/{{ mascota.id }}/">
+                {{ mascota.nombre }}
+            </a>
+            - {{ mascota.especie }}
+        </p>
+    {% empty %}
+        <p>No hay mascotas registradas.</p>
+    {% endfor %}
+</body>
+</html>

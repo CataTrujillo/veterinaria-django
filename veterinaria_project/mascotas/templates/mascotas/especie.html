@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mascotas por especie</title>
+</head>
+<body>
+    <h1>Mascotas de especie: {{ especie }}</h1>
+
+    {% for mascota in mascotas %}
+        <p>
+            {{ mascota.nombre }} - {{ mascota.raza }}
+        </p>
+    {% empty %}
+        <p>No se encontraron mascotas de esta especie.</p>
+    {% endfor %}
+
+    <a href="/mascotas/">Volver</a>
+</body>
+</html>

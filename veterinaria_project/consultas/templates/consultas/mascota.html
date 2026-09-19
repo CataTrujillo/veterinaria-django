@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consultas de mascota</title>
+</head>
+<body>
+    <h1>Consultas de la mascota {{ mascota_id }}</h1>
+
+    {% for consulta in consultas %}
+        <p>
+            {{ consulta.fecha }} - {{ consulta.motivo }}
+        </p>
+    {% empty %}
+        <p>Esta mascota no tiene consultas.</p>
+    {% endfor %}
+
+    <a href="/consultas/">Volver</a>
+</body>
+</html>
