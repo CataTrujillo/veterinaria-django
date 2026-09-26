@@ -6,4 +6,5 @@ urlpatterns = [
     path("especie/<str:especie>/", views.mascotas_por_especie, name="mascotas_por_especie"),
     path("<int:mascota_id>/", views.detalle_mascota, name="detalle_mascota"),
     path("inventario/", views.inventario, name="inventario"),
+    path("asistente-ia/", views.asistente_ia, name="asistente_ia"),
 ]

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Asistente IA Veterinario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7f8;
+            padding: 40px;
+        }
+
+        .contenedor {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px #ccc;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 25px;
+            cursor: pointer;
+        }
+
+        .respuesta {
+            margin-top: 25px;
+            padding: 20px;
+            background: #eef6f6;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <h1>🐾 Asistente Veterinario IA</h1>
+
+    <p>
+        Realiza una pregunta relacionada con mascotas,
+        cuidados veterinarios o gestión de la veterinaria.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <textarea
+            name="pregunta"
+            placeholder="Ejemplo: ¿Qué cuidados necesita un gato después de ser esterilizado?"
+            required></textarea>
+
+        <br>
+
+        <button type="submit">
+            Preguntar a la IA
+        </button>
+    </form>
+
+    {% if respuesta_ia %}
+        <div class="respuesta">
+            <h3>Respuesta de la IA:</h3>
+            <p>{{ respuesta_ia|linebreaks }}</p>
+        </div>
+    {% endif %}
+
+    <br>
+    <a href="/">← Volver al inicio</a>
+
+</div>
+
+</body>
+</html>
