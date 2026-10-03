@@ -29,7 +29,11 @@ SECRET_KEY = 'django-insecure-2g__4qq_g97)-k^j4!g_tkt(blamu$6who_9bdz66qeveuw_%(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "veterinaria-django.onrender.com",
+    "127.0.0.1",
+    "localhost",
+]
 
 
 # Application definition
