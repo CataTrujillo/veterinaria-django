@@ -7,9 +7,9 @@ const app = express();
 app.use(express.json());
 
 
-// ================================
+// =====================================
 // CONEXIÓN A SUPABASE
-// ================================
+// =====================================
 
 const pool = new Pool({
     host: process.env.DB_HOST,
@@ -23,25 +23,28 @@ const pool = new Pool({
 });
 
 
-// ================================
+// =====================================
 // CONFIGURACIÓN SWAGGER
-// ================================
+// =====================================
 
 const swaggerOptions = {
     definition: {
         openapi: "3.0.0",
+
         info: {
             title: "Microservicio Node.js - Veterinaria",
             version: "1.0.0",
             description:
                 "Microservicio para actualizar productos y servir como respaldo de consulta."
         },
+
         servers: [
             {
-                url: "http://127.0.0.1:3001"
+                url: "/"
             }
         ]
     },
+
     apis: [__filename]
 };
 
@@ -54,9 +57,9 @@ app.use(
 );
 
 
-// ================================
+// =====================================
 // ACTUALIZAR PRODUCTO
-// ================================
+// =====================================
 
 /**
  * @swagger
@@ -105,8 +108,11 @@ app.use(
  */
 
 app.put("/productos/:id", async (req, res) => {
+
     try {
+
         const { id } = req.params;
+
         const {
             nombre,
             categoria,
@@ -132,6 +138,7 @@ app.put("/productos/:id", async (req, res) => {
         );
 
         if (resultado.rows.length === 0) {
+
             return res.status(404).json({
                 mensaje: "Producto no encontrado"
             });
@@ -150,20 +157,17 @@ app.put("/productos/:id", async (req, res) => {
 });
 
 
-// ================================
+// =====================================
 // CONSULTAR PRODUCTOS
 // RESPALDO PARA RESILIENCIA
-// ================================
+// =====================================
 
 /**
  * @swagger
  * /productos:
  *   get:
  *     summary: Consultar productos
- *     description: >
- *       Consulta los productos del inventario.
- *       Este endpoint funciona como respaldo
- *       cuando falla el microservicio Python.
+ *     description: Consulta los productos del inventario y funciona como respaldo de resiliencia.
  *     responses:
  *       200:
  *         description: Lista de productos obtenida correctamente
@@ -198,16 +202,19 @@ app.get("/productos", async (req, res) => {
 });
 
 
-// ================================
-// INICIAR SERVIDOR
-// ================================
+// =====================================
+// PUERTO LOCAL / RENDER
+// =====================================
 
-app.listen(3001, () => {
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, "0.0.0.0", () => {
+
     console.log(
-        "Microservicio Node.js ejecutándose en puerto 3001"
+        `Microservicio Node.js ejecutándose en puerto ${PORT}`
     );
 
     console.log(
-        "Swagger disponible en http://127.0.0.1:3001/swagger"
+        `Swagger disponible en /swagger`
     );
 });
