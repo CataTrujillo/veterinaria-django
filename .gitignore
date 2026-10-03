@@ -5,4 +5,4 @@ venv/
 .venv/
 __pycache__/
 *.pyc
-db.sqlite3
+db.sqlite3microservicio_node/node_modules/
