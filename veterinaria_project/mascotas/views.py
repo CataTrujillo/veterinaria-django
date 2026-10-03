@@ -101,11 +101,8 @@ def eliminar_mascota(request, mascota_id):
 
 # INVENTARIO
 def inventario(request):
-
-    # Registrar producto
     if request.method == "POST":
         form = ProductoInventarioForm(request.POST)
-
         if form.is_valid():
             form.save()
             return redirect("inventario")
@@ -115,29 +112,35 @@ def inventario(request):
     productos = []
     servicio_usado = ""
 
-    # 1. Intentar microservicio principal Python
+    # URLs de los microservicios
+    python_url = os.getenv(
+        "PYTHON_SERVICE_URL",
+        "http://127.0.0.1:5000"
+    )
+
+    node_url = os.getenv(
+        "NODE_SERVICE_URL",
+        "http://127.0.0.1:3001"
+    )
+
+    # Microservicio principal: Python
     try:
         respuesta = requests.get(
-            "http://127.0.0.1:5000/inventario",
-            timeout=3
+            f"{python_url}/inventario",
+            timeout=10
         )
-
         respuesta.raise_for_status()
-
         productos = respuesta.json()
         servicio_usado = "Python"
 
-    # 2. Si Python falla, usar Node.js
+    # Si Python falla, usa Node.js
     except requests.RequestException:
-
         try:
             respuesta = requests.get(
-                "http://127.0.0.1:3001/productos",
-                timeout=3
+                f"{node_url}/productos",
+                timeout=10
             )
-
             respuesta.raise_for_status()
-
             productos = respuesta.json()
             servicio_usado = "Node.js (respaldo)"
 
@@ -154,8 +157,6 @@ def inventario(request):
             "servicio_usado": servicio_usado
         }
     )
-
-
 # EDITAR PRODUCTO
 def editar_producto(request, producto_id):
     producto = get_object_or_404(
