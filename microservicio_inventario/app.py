@@ -1,42 +1,64 @@
-
 import os
 
 from flask import Flask, jsonify
-from pymongo import MongoClient
 from dotenv import load_dotenv
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
-load_dotenv()
+load_dotenv("../.env")
 
 app = Flask(__name__)
 
 
-def obtener_coleccion():
-    cliente = MongoClient(os.environ["MONGO_URI"])
-
-    print("Bases de datos disponibles:", cliente.list_database_names())
-
-    base_datos = cliente["veterinario"]
-    print("Colecciones disponibles:", base_datos.list_collection_names())
-
-    return base_datos["inventario"]
+def obtener_conexion():
+    return psycopg2.connect(
+        host=os.getenv("DB_HOST"),
+        port=os.getenv("DB_PORT", "5432"),
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        sslmode="require"
+    )
 
 
 @app.route("/inventario", methods=["GET"])
 def listar_inventario():
-    coleccion = obtener_coleccion()
-    productos = []
+    conexion = None
 
-    for producto in coleccion.find():
-        productos.append({
-            "id": str(producto["_id"]),
-            "nombre": producto["nombre"],
-            "categoria": producto["categoria"],
-            "cantidad": producto["cantidad"],
-            "precio": producto["precio"]
-        })
+    try:
+        conexion = obtener_conexion()
 
-    return jsonify(productos)
+        cursor = conexion.cursor(
+            cursor_factory=RealDictCursor
+        )
+
+        cursor.execute("""
+            SELECT id, nombre, categoria, cantidad, precio
+            FROM mascotas_productoinventario
+            ORDER BY id
+        """)
+
+        productos = cursor.fetchall()
+
+        cursor.close()
+
+        return jsonify(productos)
+
+    except Exception as error:
+        print("ERROR:", error)
+
+        return jsonify({
+            "mensaje": "Error al consultar inventario"
+        }), 500
+
+    finally:
+        if conexion:
+            conexion.close()
 
 
 if __name__ == "__main__":
-    app.run(debug=False, use_reloader=False)
+    app.run(
+        port=5000,
+        debug=False,
+        use_reloader=False
+    )

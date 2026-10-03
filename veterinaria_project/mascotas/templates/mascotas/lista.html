@@ -1,20 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Lista de mascotas</title>
+    <meta charset="UTF-8">
+    <title>Mascotas</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7f8;
+            padding: 40px;
+        }
+
+        .contenedor {
+            max-width: 750px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px #ccc;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        form {
+            margin-bottom: 35px;
+        }
+
+        form p {
+            margin-bottom: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px 25px;
+            cursor: pointer;
+        }
+
+        .mascota {
+            background: #eef6f6;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+
+        .mascota a {
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Mascotas registradas</h1>
+
+<div class="contenedor">
+
+    <h1>🐾 Gestión de mascotas</h1>
+
+    <h2>Registrar nueva mascota</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Registrar mascota
+        </button>
+    </form>
+
+    <hr>
+
+    <h2>Mascotas registradas</h2>
 
     {% for mascota in mascotas %}
-        <p>
+      <p>
+        <strong>{{ mascota.nombre }}</strong>
+        - {{ mascota.especie }}
+        - {{ mascota.raza }}
+
+        <a href="{% url 'editar_mascota' mascota.id %}">
+            Editar
+        </a>
+
+        <a href="{% url 'eliminar_mascota' mascota.id %}">
+            Eliminar
+        </a>
+    </p>d
+
+        <div class="mascota">
+
             <a href="/mascotas/{{ mascota.id }}/">
                 {{ mascota.nombre }}
             </a>
-            - {{ mascota.especie }}
-        </p>
+
+            <p>
+                Especie: {{ mascota.especie }} |
+                Raza: {{ mascota.raza }} |
+                Edad: {{ mascota.edad }} años |
+                Peso: {{ mascota.peso }} kg |
+                Propietario: {{ mascota.propietario }}
+            </p>
+
+        </div>
+
     {% empty %}
+
         <p>No hay mascotas registradas.</p>
+
     {% endfor %}
+
+    <br>
+
+    <a href="/">← Volver al inicio</a>
+
+</div>
+
 </body>
 </html>

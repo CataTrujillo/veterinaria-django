@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar mascota</title>
+</head>
+<body>
+
+    <h1>Editar mascota</h1>
+
+    <p>Editando: <strong>{{ mascota.nombre }}</strong></p>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Guardar cambios</button>
+    </form>
+
+    <br>
+
+    <a href="{% url 'lista_mascotas' %}">
+        ← Volver a mascotas
+    </a>
+
+</body>
+</html>
